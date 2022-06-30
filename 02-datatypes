@@ -1,0 +1,133 @@
+--* Les types de données
+
+--* Text fields (small and large)
+--* Binary fields (small and large)
+--* Numeric fields
+--* AUTO_INCREMENT fields
+
+--* String fields
+-- On peut s'en servir pour la recherche
+-- - CHAR
+-- - VARCHAR (le plus commun)
+
+--* Text fields
+-- Utilisé pour les paragraphes ou  pages HTML
+-- TINYTEXT up to 255 characters
+-- - TEXT up to 65K
+-- - MEDIUMTEXT up to 16M
+-- - LONGTEXT up to 4G
+
+--* Binary fields (rarement utilisé)
+
+--* Binary Large Object (BLOB)
+-- Pour stocker des fichiers, images, documents word, PDFs, films, etc...
+-- TINYBLOB(n) - up to 255
+-- - BLOB(n) - up to 65K
+-- - MEDIUMBLOB(n) - up to 16M
+-- - LONGBLOB(n) - up to 4G
+
+--* Integers numbers
+-- - TINYINT (-128, 128)
+-- - SMALLINT (-32768, +32768)
+-- - INT or INTEGER (2 Billion)
+-- - BIGINT - (10**18 ish)
+
+--* Float numbers
+-- - FLOAT (32-bit) 10**38 with seven digits of accuracy
+-- - DOUBLE (64-bit) 10**308 with 14 digits of accuracy
+
+--* Dates
+-- On utilise très souvent
+-- - TIMESTAMP - 'YYYY-MM-DD HH:MM:SS' (1970, 2037)
+-- - DATETIME - 'YYYY-MM-DD HH:MM:SS'
+-- - DATE - 'YYYY-MM-DD'
+-- - TIME - 'HH:MM:SS'
+-- - Built-in MySQL function NOW() (la date actuelle)
+
+--* AUTO_INCREMENT
+-- Très important !
+-- Quand on a plusieurs tableaux et qu'on a besoin de les joindre ensemble, on a besoin d'une clef primaire (primary key) qui sera un entier pour chaque ligne pour qu'on puisse s'en servir de référence dans les autres tableaux en étant que clef étrangère (foreign key)
+
+-- Exemple :
+-- On supprime la table Users (avec l'interface graphique de phpMyAdmin)
+DROP TABLE Users;
+
+-- On en créé une nouvelle
+CREATE TABLE Users (
+user_id INT UNSIGNED NOT NULL
+AUTO_INCREMENT,
+name VARCHAR(128),
+email VARCHAR(128),
+PRIMARY KEY(user_id)
+);
+
+DESCRIBE Users;
+
+-- On réinsère des lignes (une à une)
+INSERT INTO Users (name, email) VALUES ('Chuck', 'chuck@afci.fr') ;
+INSERT INTO Users (name, email) VALUES ('Sally', 'sally@afci.fr') ;
+INSERT INTO Users (name, email) VALUES ('Somesh', 'somesh@afci.fr') ;
+INSERT INTO Users (name, email) VALUES ('Caitlin', 'cait@afci.fr') ;
+INSERT INTO Users (name, email) VALUES ('Ted', 'ted@afci.fr') ;
+
+-- On récupère les enregistrements (dans la CLI)
+SELECT * FROM Users;
+
+-- On constate que l'user_id augmente tout seul (il sera unique pour chaque ligne)
+
+
+--* Indexes
+-- - As a table gets large (they always do), scanning all the data to find a
+-- single row becomes very costly
+
+-- - When drchuck@gmail.com logs into FaceBook, they must find my
+-- password amongst 500 million users
+
+-- - There are techniques to greatly shorten the scan as long as you create
+-- data structures and maintain those structures - like shortcuts
+
+-- -> Hashes or Trees
+
+--* MySQL Index Types
+
+--* PRIMARY KEY - Very little space, exact match, requires no duplicates,
+--* extremely fast for integer fields
+--* On l'utilisera tout le temps pour les champs en auto_increment
+
+--* INDEX - Good for individual row lookup and sorting / grouping
+--* results - works best with exact matches or prefix lookups - can
+--* suggest HASH or BTREE
+--* On l'utilisera pour les champs avec des caractère pour la recherche
+
+--* Hashes
+-- A hash function is any algorithm or subroutine
+-- that maps large data sets to smaller data sets,
+-- called keys. For example, a single integer can
+-- serve as an index to an array (cf. associative
+-- array). The values returned by a hash function
+-- are called hash values, hash codes, hash sums,
+-- checksums, or simply hashes.
+
+-- Hash functions are mostly used to accelerate
+-- table lookup or data comparison tasks such as
+-- finding items in a database...
+
+-- B-Tress
+-- A B-tree is a tree data structure that keeps data sorted and allows
+-- searches, sequential access, insertions, and deletions in logarithmic
+-- amortized time. The B-tree is optimized for systems that read and
+-- write large blocks of data. It is commonly used in databases and file
+-- systems.
+
+-- Ajouter un index après que la table soit créée
+ALTER TABLE Users ADD INDEX (email) USING BTREE;
+
+-- Ajouter un index lors de la création de la table
+CREATE TABLE Users (
+  user_id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(128),
+  email VARCHAR(128),
+  PRIMARY KEY(user_id),
+  INDEX ( email ) USING BTREE
+);
+-- Le tri par name est plus rapide que par email (voir sur phpMyAdmin) mais la différence est difficile à voir avec seulement 5 lignes

@@ -10,7 +10,7 @@
 --* Database - contient une ou plusieurs tables
 --* Relation (ou table) - contient des tuples et des atttributs
 --* Tuple (ou ligne)- un ensemble de champs qui représente généralement un "objet" comme une personne ou une piste de musique
---* Attrtibut (aussi colonne ou champs) - un des nombreux éléments de données correspondant à l'objet représenté par la ligne
+--* Attribut (aussi colonne ou champs) - un des nombreux éléments de données correspondant à l'objet représenté par la ligne
 
 -- http://2.bp.blogspot.com/-0KbHfcMTAZU/VmBfChfIGYI/AAAAAAAAFzY/QvaYTcRQ6FA/s1600/base%2Bde%2Bdonn%25C3%25A9e%2Brelationnelle.png
 
